@@ -1,0 +1,44 @@
+#include "stack.h"
+
+stack::stack()
+{
+  _head = NULL;
+}
+
+stack:: ~stack()
+{
+  node * temp;
+  while( _head != NULL){
+    temp = _head ->next;
+    delete _head;
+    _head = temp;
+  }
+
+}
+
+void stack::push(const element  & item)
+{
+  node * temp = new node;
+  temp -> data = item;
+  temp -> next = _head;
+  _head = temp;
+
+}
+
+void stack::pop()
+{
+  node * temp;
+  temp = _head;
+  _head = _head -> next;
+  delete temp;
+}
+
+bool stack:: empty() const
+{
+  return(_head == NULL);
+}
+
+int stack:: top() const
+{
+  return _head -> data;
+}

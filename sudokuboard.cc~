@@ -1,0 +1,63 @@
+
+#include "sudokuboard.h"
+
+sudokuboard:: sudokuboard()
+{
+  for (int i = 0; i < 9; i++){
+      board[i]  = "_________"; 
+  }   
+}
+
+void sudokuboard::place(size_t r, size_t c, char n)
+{
+  board[r][c] = n; 
+}
+
+void sudokuboard:: print()const
+{
+  for(size_t i = 0; i < 9; i++)
+    cout << board[i] << endl;
+}
+
+char sudokuboard:: get(size_t r, size_t c)const
+{
+  return board[r][c];
+}
+
+void sudokuboard::remove( size_t r, size_t c)
+{
+  // replace the number at position (r,c) with a blank space
+  board[r][c] ='_' ;
+}
+
+bool sudokuboard:: canPlace(size_t r, size_t c, char n)const
+{
+  if(board[r][c] != '_')
+    return false;
+  for(size_t i = 0; i < 9; i++){
+    if(board[r][i] == n)
+      return false;
+    if(board[i][c] == n)
+      return false;
+  }
+  size_t _r = (r/3)*3;
+  size_t _c = (c/3)*3;
+  for(size_t a = _r; a < _r + 3; a++){
+    for(size_t b = _c; b < _c + 3; b++){
+      if(board[a][b] == n)
+	return false;
+    }
+  }
+  return true;       
+}
+
+bool sudokuboard:: solved()const
+{
+  for( size_t j = 0; j < 9; j++){
+    for( size_t k = 0; k < 9; k++){
+      if(board[j][k] == '_')
+	return false; 
+    }
+  }   
+  return true;
+}

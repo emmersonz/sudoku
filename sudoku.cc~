@@ -1,0 +1,91 @@
+#include "sudokuboard.h"
+#include "stack.h"
+#include <iostream>
+using namespace std;
+
+
+sudokuboard b;
+stack st;
+char search_numeral(const sudokuboard & b, size_t r, size_t c, char n)
+{
+  for(char i = '1' ; i <= '9'; i++){
+    if(b.canPlace(r,c,i))
+      return i;
+  }
+  return ':';
+}
+
+char next_numeral(const sudokuboard & b, size_t r, size_t c, char n)
+{
+  for (char i = n + 1; i <= '9'; i++){
+    if(b.canPlace(r, c, i))
+      return i;
+  }
+  return ':';
+}
+
+bool find_most_constrained( size_t & r, size_t &  c, char & num)
+{
+  size_t current_constrained = 10;
+  for (size_t i = 0; i < 9; i++){
+    for (size_t j = 0; j < 9; j++){
+      size_t count = 0;
+      if (b.get(i,j) == '_'){
+	for (char x = '1'; x <= '9'; x++){
+	  if(b.canPlace(i,j,x))
+	     count++ ;
+	}
+	if(count != 0){
+	  if(count < current_constrained){
+	    current_constrained = count;
+	    r = i;
+	    c = j;
+	    num = search_numeral(b, r, c, num);
+	  } 
+	}  
+      }	  
+    }
+  }
+  return (current_constrained != 10);
+}
+
+
+
+void solve(sudokuboard & b, size_t  r, size_t c, char num)  
+{
+  while (not b.solved()){
+      if(find_most_constrained(r, c, num)){
+	// cout << "hi" << endl; // for testing
+	b.place(r, c, num);
+	st.push(r);
+	st.push(c);
+      }
+      else{
+	do {
+ 	  c = st.top(); st.pop();
+	  r = st.top(); st.pop();
+	  num = b.get(r,c);
+	  b.remove(r, c);
+	  num = next_numeral( b, r, c, num);
+	} while (num > '9');
+	  b.place(r, c, num);
+	  st.push(r);
+	  st.push(c);
+      }
+  }
+}   
+
+int main()
+{
+  for (int i = 0; i < 9; i++){
+    for (int j = 0; j < 9; j++){
+      char c;
+      cin >> c;
+      b.place(i,j,c);
+    }
+    cin.ignore();
+  }
+  solve(b, 0, 0, '1');
+  b.print();
+}
+

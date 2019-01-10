@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+
+struct node {
+  int data;
+  node *next;
+};
+
+class stack{
+
+ public:
+  typedef int element;
+  // Constructor to make the stack
+  stack();
+  
+  //Destructor to destroy the board
+  ~stack();
+
+  // add an element to the stack
+  void push(const element  & item);
+
+  // remove the top most element from stack
+  void pop();
+
+  // return true if the stack is empty
+  bool empty ()const;
+
+  // return the top most element in the stack
+  int  top() const;
+ 
+private:
+  node *_head;
+};
